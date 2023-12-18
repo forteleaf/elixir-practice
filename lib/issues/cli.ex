@@ -39,10 +39,12 @@ defmodule Issues.CLI do
   #   {_, [user, project], _} -> {user, project, @default_count}
   #   _ -> :help
   # end
-  def process({user, project, _count}) do
+  def process({user, project, count}) do
     Issues.GithubIssues.fetch(user, project)
     |> decode_response()
     |> sort_into_descending_order
+    |> last(count)
+    |> print_table_for_columns(["number", "created_at", "title"])
   end
 
   def decode_response({:ok, body}), do: body
@@ -55,5 +57,9 @@ defmodule Issues.CLI do
   def sort_into_descending_order(list_of_issues) do
     list_of_issues
     |> Enum.sort(fn i1, i2 -> i1["created_at"] >= i2["created_at"] end)
+  end
+
+  def last(list, count) do
+    list |> Enum.take(count) |> Enum.reverse()
   end
 end
