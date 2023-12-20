@@ -21,4 +21,9 @@ defmodule CliTest do
     for value <- values,
         do: %{"created_at" => values, "other_data" => "xxx"}
   end
+
+  defp faske_created_at_list(values) do
+    for value <- values,
+        do: %{"created_at" => value, "other_data" => "xxx"}
+  end
 end
